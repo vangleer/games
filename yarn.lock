@@ -309,10 +309,10 @@
   "resolved" "https://registry.npmjs.org/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz"
   "version" "1.0.0"
 
-"tass-ui@^0.3.5":
-  "integrity" "sha512-IeNkYCJ1e3pXE5shJsXKYpKt1WxyEObcIZYaTwGfF15EFwAd+xMjRhe4gXMNOvorspNp8RcLE5M2cYJVuxGxLA=="
-  "resolved" "https://registry.npmjs.org/tass-ui/-/tass-ui-0.3.5.tgz"
-  "version" "0.3.5"
+"tass-ui@^0.3.8":
+  "integrity" "sha512-2n14CXrBcd7zIlk8tTIcdpjUUZ9XeKvm3oyjuaIdCvEBqMsjONXQIo0AbKpKE6qCUsQbjdjtZecIGpMvwo7qKQ=="
+  "resolved" "https://registry.npmjs.org/tass-ui/-/tass-ui-0.3.8.tgz"
+  "version" "0.3.8"
 
 "typescript@*", "typescript@^4.9.3":
   "integrity" "sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g=="

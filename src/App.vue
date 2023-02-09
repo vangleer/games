@@ -5,7 +5,7 @@
 </template>
 <script setup lang="ts">
 import Puzzle from './components/Puzzle.vue'
-import { version, TassMessage } from 'tass-ui';
+import { version, TassMessage } from 'tass-ui'
 console.log(version, 'version')
 function showMsg() {
   TassMessage({
