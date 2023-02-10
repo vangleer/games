@@ -1,6 +1,5 @@
 <template>
   <div class="v-puzzle-container">
-    <VanButton type="primary" @click="createGrid">刷新</VanButton>
     <div class="v-puzzle-box" :style="boxStyle">
       <div
         v-for="(item, index) in gridList"
@@ -16,6 +15,7 @@
 
 <script setup lang="ts">
 import { computed, ref, CSSProperties } from 'vue'
+import demoImg from '../assets/demo.webp'
 interface GridItem {
   style: CSSProperties,
   text: number,
@@ -37,11 +37,11 @@ const props = defineProps({
   },
   cols: {
     type: Number,
-    default: 1
+    default: 3
   },
   imgUrl: {
     type: String,
-    default: 'demo.webp'
+    default: demoImg
   }
 })
 
@@ -122,6 +122,10 @@ function check() {
 }
 
 createGrid()
+
+defineExpose({
+  refresh: createGrid
+})
 </script>
 
 <style scoped>
