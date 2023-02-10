@@ -6,7 +6,7 @@
         v-for="(item, index) in gridList"
         :key="index"
         :style="item.style"
-        @click="handleGridClick(item)"
+        @click="handleGridClick(index)"
       >
         {{ item.text }}
       </div>
@@ -37,7 +37,7 @@ const props = defineProps({
   },
   cols: {
     type: Number,
-    default: 3
+    default: 1
   },
   imgUrl: {
     type: String,
@@ -54,63 +54,84 @@ const gridList = ref<GridItem[]>([])
 
 function createGrid() {
   gridList.value = []
-  const gridWidth = props.width / props.cols
-  const gridHeight = props.height / props.rows
+  const gridWidth = Math.floor(props.width / props.cols)
+  const gridHeight = Math.floor(props.height / props.rows)
 
   const allGrid = props.cols * props.rows
-  // 创建一个所有数组
-  const tempArr = new Array(allGrid).fill(0).map((item, index) => index)
-  // 打乱数组
-  tempArr.sort(() => Math.random() > 0.5 ? -1 : 1)
-
-  for (let i = 0; i < tempArr.length; i++) {
-    const index = tempArr[i]
-    const left = (index % props.cols) * gridWidth
-    const top = Math.floor(index / props.cols) * gridHeight
-
-    const left2 = (i % props.cols) * gridWidth
-    const top2 = Math.floor(i / props.cols) * gridHeight
-    const block = index === tempArr.length - 1
+  // 组装数组
+  for (let i = 0; i < allGrid; i++) {
+    const left = (i % props.cols) * gridWidth
+    const top = Math.floor(i / props.cols) * gridHeight
+    const block = i === allGrid - 1
     gridList.value.push({
       style: {
         width: gridWidth + 'px',
         height: gridHeight + 'px',
-        position: 'absolute',
-        background: block ? '#fff' : `url(${props.imgUrl}) -${left2}px -${top2}px`,
-        left: left + 'px',
-        top: top + 'px',
+        background: block ? '#fff' : `url(${props.imgUrl}) -${left}px -${top}px`,
         border: '1px solid rgb(255, 255, 255)'
       },
-      text: i + 1,
-      id: index + 1,
+      text: i,
+      id: i,
       block
     })
   }
+
+  // 打乱数组
+  gridList.value.sort(() => Math.random() > 0.5 ? 1 : -1)
 }
 
-function handleGridClick(item: GridItem) {
-  const blockItem = gridList.value.find(item => item.block)
-  // if (!blockItem) return
-  // if (item.id === blockItem.id) return console.log('点击了自己')
-  // console.log(parseInt(blockItem.style.left), parseInt(item.style.left), parseInt(blockItem.style.width))
-  // if (
-  //   Math.abs(parseInt(blockItem.style.left) - parseInt(item.style.left)) <= parseInt(blockItem.style.width)
-  //   &&
-  //   Math.abs(parseInt(blockItem.style.top) - parseInt(item.style.top)) <= parseInt(blockItem.style.height)
-  // ) {
-  //   console.log('交换')
-  // }
+function handleGridClick(index: number) {
+  const blockIndex = gridList.value.findIndex(item => item.block)
 
-  console.log(item)
+  // 符合条件的交换位置
+  console.log(index, blockIndex, 'index, blockIndex')
+
+  // 根据index获取到点击框在网格中的坐标
+  const aCols = index % props.cols
+  const aRows = Math.floor(index / props.cols)
+
+  // 获取空白框的坐标
+  const bCols = blockIndex % props.cols
+  const bRows = Math.floor(blockIndex / props.cols)
+
+  // 根据坐标判断是否可以交换
+  if (Math.abs(aRows - bRows) >= 1 && Math.abs(aCols - bCols) >= 1) {
+    return console.log('不交换')
+  }
+  if (Math.abs(aRows - bRows) == 1 || Math.abs(aCols - bCols) == 1) {
+    console.log('交换')
+    swap(index, blockIndex)
+
+    if (check()) {
+      alert('恭喜，完成拼图')
+    }
+  }
+}
+
+function swap(i: number, j: number) {
+  [gridList.value[j], gridList.value[i]] = [gridList.value[i], gridList.value[j]]
+}
+
+function check() {
+  for (let i = 0; i < gridList.value.length; i++) {
+    if (gridList.value[i].id !== i) {
+      return false
+    }
+  }
+  return true
 }
 
 createGrid()
 </script>
 
 <style scoped>
+div {
+  box-sizing: border-box;
+}
 .v-puzzle-box {
-  position: relative;
   border: 1px solid #ccc;
   cursor: pointer;
+  display: flex;
+  flex-wrap: wrap;
 }
 </style>
