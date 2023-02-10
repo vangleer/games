@@ -8,9 +8,9 @@
     "component",
     "vue"
   ],
-  "homepage": "https://vangleer.github.io/vangle/",
+  "homepage": "https://vangleer.github.io/puzzle/",
   "bugs": {
-    "url": "https://github.com/vangleer/vangle/issues"
+    "url": "https://github.com/vangleer/puzzle/issues"
   },
   "scripts": {
     "dev": "vite",
