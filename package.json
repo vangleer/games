@@ -1,8 +1,17 @@
 {
   "name": "puzzle",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
+  "keywords": [
+    "puzzle",
+    "component",
+    "vue"
+  ],
+  "homepage": "https://vangleer.github.io/vangle/",
+  "bugs": {
+    "url": "https://github.com/vangleer/vangle/issues"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
