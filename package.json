@@ -1,16 +1,17 @@
 {
-  "name": "puzzle",
+  "name": "games",
   "private": true,
   "version": "0.0.1",
   "type": "module",
   "keywords": [
+    "front end games",
     "puzzle",
     "component",
     "vue"
   ],
-  "homepage": "https://vangleer.github.io/puzzle/",
+  "homepage": "https://vangleer.github.io/games/",
   "bugs": {
-    "url": "https://github.com/vangleer/puzzle/issues"
+    "url": "https://github.com/vangleer/games/issues"
   },
   "scripts": {
     "dev": "vite",

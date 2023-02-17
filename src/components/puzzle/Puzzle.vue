@@ -1,6 +1,6 @@
 <template>
-  <div class="v-puzzle-container">
-    <div class="v-puzzle-box" :style="boxStyle">
+  <div class="g-puzzle-container">
+    <div class="g-puzzle-box" :style="boxStyle">
       <div
         v-for="(item, index) in gridList"
         :key="index"
@@ -14,8 +14,9 @@
 </template>
 
 <script setup lang="ts">
+import { VanMessage } from 'vangle';
 import { computed, ref, CSSProperties } from 'vue'
-import demoImg from '../assets/demo.webp'
+import demoImg from '../../assets/demo.webp'
 interface GridItem {
   style: CSSProperties,
   text: number,
@@ -42,6 +43,10 @@ const props = defineProps({
   imgUrl: {
     type: String,
     default: demoImg
+  },
+  simple: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -84,8 +89,6 @@ function handleGridClick(index: number) {
   const blockIndex = gridList.value.findIndex(item => item.block)
 
   // 符合条件的交换位置
-  console.log(index, blockIndex, 'index, blockIndex')
-
   // 根据index获取到点击框在网格中的坐标
   const aCols = index % props.cols
   const aRows = Math.floor(index / props.cols)
@@ -93,17 +96,24 @@ function handleGridClick(index: number) {
   // 获取空白框的坐标
   const bCols = blockIndex % props.cols
   const bRows = Math.floor(blockIndex / props.cols)
-
-  // 根据坐标判断是否可以交换
-  if (Math.abs(aRows - bRows) >= 1 && Math.abs(aCols - bCols) >= 1) {
-    return console.log('不交换')
-  }
-  if (Math.abs(aRows - bRows) == 1 || Math.abs(aCols - bCols) == 1) {
-    console.log('交换')
+  // 如果是简易版，可以交换任意两个分块
+  if (props.simple) {
     swap(index, blockIndex)
-
     if (check()) {
-      alert('恭喜，完成拼图')
+      VanMessage.success('恭喜你，完成了拼图')
+    }
+  } else {
+    // 正常版，只能交换与空白框相邻的分块
+    // 根据坐标判断是否可以交换
+    if (Math.abs(aRows - bRows) >= 1 && Math.abs(aCols - bCols) >= 1) {
+      return
+    }
+    if (Math.abs(aRows - bRows) == 1 || Math.abs(aCols - bCols) == 1) {
+      swap(index, blockIndex)
+
+      if (check()) {
+        VanMessage.success('恭喜你，完成了拼图')
+      }
     }
   }
 }
@@ -132,7 +142,7 @@ defineExpose({
 div {
   box-sizing: border-box;
 }
-.v-puzzle-box {
+.g-puzzle-box {
   border: 1px solid #ccc;
   cursor: pointer;
   display: flex;
