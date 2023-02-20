@@ -1,19 +1,20 @@
 <template>
   <div class="g-lottery-container">
-    <div class="g-lottery">
+    <div class="g-lottery" :style="{ width: boxWidth + 'px', height: boxWidth + 'px' }">
       <div
         class="g-lottery-box1"
-        :style="{ width: state.boxWidth + 'px', height: state.boxWidth + 'px' }"
+        :style="{ width: boxWidth + 'px', height: boxWidth + 'px' }"
       >
         <div
           class="g-lottery-box2"
-          :style="{ transform: `rotate(${state.rotate}deg)` }"
+          :style="{ transform: `rotate(${rotate}deg)` }"
+          @transitionend="handleTransitionend"
         >
           <div
-            v-for="item in lotteryList"
+            v-for="(item, index) in data"
             :key="item.name"
             class="g-lottery-item"
-            :style="{ width: state.itemWidth + 'px', height: state.itemWidth + 'px', ...item }"
+            :style="{ width: itemWidth + 'px', height: itemWidth + 'px', ...transform(index) }"
           >
             <span>{{ item.name }}</span>
             <span>{{ item.desc }}</span>
@@ -27,61 +28,89 @@
 </template>
 
 <script setup lang='ts'>
-import { reactive } from 'vue'
+import { PropType, ref } from 'vue'
 import circlePanBlank from './images/circle_pan_blank.png'
 import circleBtn from './images/circle_btn.png'
-const state = reactive({
-  boxWidth: 400,
-  itemWidth: 80,
-  rotate: 0,
-  circleNum: 0
+import { VanMessage } from 'vangle';
+interface Item  {
+  name?: string
+  desc?: string
+}
+const props = defineProps({
+  data: {
+    type: Array as PropType<Item[]>,
+    default: () => [
+      { name: 'IPhone14', desc: '手机' },
+      { name: '100元', desc: '话费' },
+      { name: '再来一次', desc: '鼓励奖' },
+      { name: '10元', desc: '话费' },
+      { name: '5元', desc: '话费' },
+      { name: '20元', desc: '话费' },
+      { name: '笑脸', desc: '谢谢参与' },
+      { name: 'IPad Air', desc: '平板' }
+    ]
+  },
+  boxWidth: {
+    type: Number,
+    default: 400
+  },
+  itemWidth: {
+    type: Number,
+    default: 80
+  }
 })
-const lotteryList: any = reactive([
-  { name: 'IPhone14', desc: '手机' },
-  { name: '100元', desc: '话费' },
-  { name: '再来一次', desc: '鼓励奖' },
-  { name: '10元', desc: '话费' },
-  { name: '5元', desc: '话费' },
-  { name: '20元', desc: '话费' },
-  { name: '笑脸', desc: '谢谢参与' },
-  { name: 'IPad Air', desc: '平板' }
-])
 
-function transform() {
+
+
+const rotate = ref(0)
+const circleNum = ref(0)
+const active = ref(0)
+
+function transform(index: number) {
   //中心点横坐标
-  var dotLeft = (state.boxWidth - state.itemWidth) / 2;
+  const dotLeft = (props.boxWidth - props.itemWidth) / 2;
   //中心点纵坐标
-  var dotTop = dotLeft;
+  const dotTop = dotLeft;
 
-  const radius = state.boxWidth / 2.5
-  const num = lotteryList.length
+  const radius = props.boxWidth / 2.5
+  const num = props.data.length
   const avd = 360 / num
   const ahd = avd * Math.PI / 180
-  for (let index = 0; index < num; index++) {
-    const x = Math.cos((ahd*index)) * radius + dotLeft
-    const y = Math.sin((ahd*index)) * radius + dotTop
 
-    const rotate = avd * (index + 2)
-    lotteryList[index].transform = `translate(${x}px, ${y}px) rotate(${rotate}deg)`
+  const x = Math.cos((ahd*index)) * radius + dotLeft
+  const y = Math.sin((ahd*index)) * radius + dotTop
+  const rotate = avd * (index + 2)
+  return {
+    transform: `translate(${x}px, ${y}px) rotate(${rotate}deg)`
   }
 }
 
 function handleStart() {
-  const len = lotteryList.length
+  const len = props.data.length
   const randomIndex = Math.floor(Math.random() * len)
-  state.circleNum += 6
-  const rotate = state.circleNum * 360 - randomIndex * 45
-  state.rotate = rotate
+  circleNum.value += 6
+  const rotateNum = circleNum.value * 360 - randomIndex * 45
+  rotate.value = rotateNum
+
+  active.value = randomIndex
 }
-transform()
+
+const handleTransitionend = () => {
+  const item = props.data[active.value]
+
+  VanMessage({
+    type: 'success',
+    message: `恭喜您获得 <span style="color: #EA4661;">${item.desc} ${item.name}</span>, 赶紧领回家吧!!!😀`,
+    dangerouslyUseHTMLString: true
+  })
+}
 </script>
 
 <style lang='scss' scoped>
 .g-lottery {
   position: relative;
-  margin: 100px auto;
-  width: 400px;
-  height: 400px;
+  border: 12px solid #ff733e;
+  border-radius: 50%;
   .g-lottery-box1 {
     transform: rotate(-90deg);
     transform-origin: center;
