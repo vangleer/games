@@ -11,7 +11,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: zh/games/puzzle
+      link: /zh/games/puzzle
     - theme: alt
       text: View on Githib
       link: https://github.com/vangleer/games
