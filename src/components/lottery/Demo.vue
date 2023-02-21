@@ -1,7 +1,7 @@
 <template>
   <h1>Lottery</h1>
   <Lottery />
-  <!-- <Grid /> -->
+  <Grid />
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
